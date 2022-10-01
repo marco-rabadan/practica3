@@ -8,7 +8,7 @@ pipeline {
     }
 
     stages {
-        
+       /* 
         stage('Dependency Check') {
             steps {
                 dir('.'){
@@ -23,7 +23,7 @@ pipeline {
             }
         }
 
-/*        stage('Analyze'){
+        stage('Analyze'){
             steps{
                 withSonarQubeEnv('MiSonarQube'){
                     sh "mvn clean package sonar:sonar \
