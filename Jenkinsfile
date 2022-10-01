@@ -56,6 +56,9 @@ pipeline {
         stage('Liquibase') {
             steps {
                 dir("liquibase/"){
+                    environment {
+                        PATH="/opt/liquibase:${env.PATH}"
+                        }
                     sh 'liquibase --changeLogFile="changesets/db.changelog-master.xml" update'
                 }
             }
