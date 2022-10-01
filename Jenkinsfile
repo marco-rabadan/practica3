@@ -65,11 +65,13 @@ pipeline {
         }
         
         stage('DeployService'){
-             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'docker_nexus', usernameVariable: 'usrnexus', passwordVariable: 'pswdnexus']]) {
+            steps{
+               withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'docker_nexus', usernameVariable: 'usrnexus', passwordVariable: 'pswdnexus']]) {
                   sh 'docker login -u $usrnexus -p $pswdnexus 192.168.5.125:8083'
                   sh 'docker stop microservicio || true'
                   sh 'docker run -d --rm --name microservicio -e SPRING_PROFILES_ACTIVE=dev -p 8090:8090 192.168.5.125:8083/repository/docker-private/microservicio:latest"'
                 }
+            }
         }
 
         stage('Stress') {
