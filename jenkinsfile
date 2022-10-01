@@ -1,0 +1,17 @@
+pipeline {
+    agent any
+    tools{
+        maven 'Maven3.8.6'
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Ejecutando Build...'
+                dir ("./"){
+                   sh "mvn clean package "
+                }
+            }
+        }
+    }
+}
