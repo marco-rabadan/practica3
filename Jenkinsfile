@@ -20,7 +20,7 @@ pipeline {
             }
         }
 
-        stage('Analyze'){
+/*        stage('Analyze'){
             steps{
                 withSonarQubeEnv('MiSonarQube'){
                     sh "mvn clean package sonar:sonar \
@@ -41,7 +41,7 @@ pipeline {
             steps{
                 sh "docker build -t microservicio ."
             }
-        }
+        }*/
 
         stage('Push image') {
             steps {
