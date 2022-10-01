@@ -64,7 +64,7 @@ pipeline {
             }
         }
         
-        stage('Deploy Service'){
+        stage('DeployService'){
              withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'docker_nexus', usernameVariable: 'usrnexus', passwordVariable: 'pswdnexus']]) {
                   sh 'docker login -u $usrnexus -p $pswdnexus 192.168.5.125:8083'
                   sh 'docker stop microservicio || true'
