@@ -45,7 +45,7 @@ pipeline {
                 sh "docker build -t microservicio ."
             }
         }*/
-
+/*
         stage('Push image') {
             steps {
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'docker_nexus', usernameVariable: 'usrnexus', passwordVariable: 'pswdnexus']]) {
@@ -55,11 +55,33 @@ pipeline {
                 }
             }
         }
-
+*/
         stage('Liquibase') {
             steps {
                 dir("liquibase/"){
                     sh 'liquibase --changeLogFile="changesets/db.changelog-master.xml" update'
+                }
+            }
+        }
+        
+        stage('Deploy Service'){
+             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'docker_nexus', usernameVariable: 'usrnexus', passwordVariable: 'pswdnexus']]) {
+                  sh 'docker login -u $usrnexus -p $pswdnexus 192.168.5.125:8083'
+                  sh 'docker stop microservicio || true'
+                  sh 'docker run -d --rm --name microservicio -e SPRING_PROFILES_ACTIVE=dev -p 8090:8090 192.168.5.125:8083/repository/docker-private/microservicio:latest"'
+                }
+        }
+
+        stage('Stress') {
+            steps {
+                sleep 5
+                dir("GatlingTest/"){
+                    sh 'mvn gatling:test -Dgatling.simulationClass=microservice.PingUsersSimulation'
+                }
+            }
+            post {
+                always {
+                    gatlingArchive()
                 }
             }
         }
